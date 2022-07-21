@@ -1,0 +1,6 @@
+node_modulesFROM node:16
+COPY . .
+RUN npm install
+EXPOSE 2404
+
+CMD ["node" ,"app.js"]
