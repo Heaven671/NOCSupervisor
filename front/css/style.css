@@ -1,0 +1,7 @@
+.graph {
+    display: flex;
+    max-width: 30px;
+    background-color: red;
+    border-color: whitesmokes;
+    border-radius: 100%
+}
