@@ -35,8 +35,7 @@ const logInPage = () => {
               body: JSON.stringify(e.target.value)
             })
           }} >Log in</Button>
-         <Button variant="outline" maxWidth="500px" colorScheme="teal" isLoading={value}><Link href="signUp.jsx">Inscrivez-vous</Link></Button>
-          <IconButton onClick={toggleColorMode} icon={() => { click === false ? <SunIcon/> : () => {setClickValue(!click), <MoonIcon/> }}}/>
+         <Button variant="outline" maxWidth="500px" colorScheme="teal" isLoading={value} onClick={(e) => {router.push("/signUp") }}></Button>
         </Flex>
       </FormControl>
     </Flex>

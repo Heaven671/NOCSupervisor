@@ -10,13 +10,18 @@ const argon2i = require('argon2-ffi').argon2i;
 const crypto = require('crypto')
 const userSchema = require('./models/users')
 const users = require('./models/users');
+const cors = require('cors');
 
 
 
-var csrfProtection = csurf({ cookie: true })
-var parseForm = bodyParser.urlencoded({ extended: false })
+//var csrfProtection = csurf({ cookie: true })
+//var parseForm = bodyParser.urlencoded({ extended: false })
 
-app.use(cookieParser());
+//app.use(cookieParser());
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
 
 mongoose.connect("mongodb://localhost:27017", function(err) {
   if (err) { throw err; }
@@ -28,7 +33,7 @@ app.get("/", (_,res) => {
 });
 
 app.post("/api/signUp", (req,res) => {
-    console.log(req.body);
+    console.log(req);
     if(!validEmail(req.body.mail)){
         res.send({success: false,
         message: "Not a valid email"})
