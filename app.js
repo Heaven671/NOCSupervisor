@@ -1,4 +1,4 @@
-var dotenv = require('dotenv/config');
+/*var dotenv = require('dotenv/config');
 const express = require("express");
 var app = express();
 var csurf = require('csurf')
@@ -118,4 +118,4 @@ function validEmail(email){
     const emailregex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
     if(!emailregex.text(email)) return false;
     return true;
-}
+}*/

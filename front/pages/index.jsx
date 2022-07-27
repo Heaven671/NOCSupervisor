@@ -10,6 +10,8 @@ const logInPage = () => {
   const formBackground = useColorModeValue("gray.100", "gray.700")
   const [value, setValue] = useState(false);
   const [click, setClickValue] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [input, setInput] = useState('');
   const isError = input === ''
   const router = useRouter();
@@ -23,16 +25,16 @@ const logInPage = () => {
       <FormControl isRequired alignItems ="center" justifyContent="center" flexDirection="flex" alignSelf="center" width={350} isInvalid={isError}>
         <Flex boxShadow="lg" direction="column" background={formBackground} p={12} rounded={6}>
           <Heading mb={6}>Log In</Heading>
-          <Input onChange={handleInputChange} placeholder="aezeae@chakra-ui.com" variant="filled" mb={3} type="email" />
-          <Input onChange={handleInputChange} placeholder="*******" variant="filled" mb={6} type="password" /> {isError ? (<FormHelperText>Entrez vos identifiants</FormHelperText>) : (<FormErrorMessage> Email is required </FormErrorMessage>) }
+          <Input onChange={(e) => { setEmail(e.currentTarget.value)}} placeholder="aezeae@chakra-ui.com" variant="filled" mb={3} type="email" />
+          <Input onChange={(e)=>{ setPassword(e.currentTarget.value)}} placeholder="*******" variant="filled" mb={6} type="password" /> {isError ? (<FormHelperText>Entrez vos identifiants</FormHelperText>) : (<FormErrorMessage> Email is required </FormErrorMessage>) }
           <Button colorScheme="teal" isLoading={value} onClick={(e) => { 
             e.preventDefault;
-            fetch('/api/logIn', {
+            fetch('/api/signIn', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(e.target.value)
+              body: JSON.stringify({mail: email, pass: password })
             })
           }} >Log in</Button>
          <Button variant="outline" maxWidth="500px" colorScheme="teal" isLoading={value} onClick={(e) => {router.push("/signUp") }}></Button>

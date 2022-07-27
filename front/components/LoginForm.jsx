@@ -20,7 +20,7 @@ export default function LoginForm(){
   const handleSubmit = async (event) => {
     event.preventDefault;
 
-    let response = await fetch('http://localhost:8080/api/signUp', {
+    let response = await fetch('/api/signUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,13 +32,13 @@ export default function LoginForm(){
       console.log(e);
     })
   };
+
   const handleInputChange = (e) => {
     setInput(e.target.value);
   }
 
     return ( 
         <Flex height="60vh" alignItems="center" justifyContent="center" mt={100}>
-        <form method="POST" onSubmit={handleSubmit}>
         <FormControl isRequired alignItems ="center" justifyContent="center" flexDirection="flex" alignSelf="center" width={350} isInvalid={isError}>
           <Flex boxShadow="lg" direction="column" background={formBackground} p={12} rounded={6}>
           <ThemeToggler></ThemeToggler>
@@ -49,10 +49,9 @@ export default function LoginForm(){
             <Input onChange={e => setEmail(e.currentTarget.value)} placeholder="aezeae@chakra-ui.com" variant="filled" mb={3} type="email" />
             <FormLabel>Entrez votre mot de passe</FormLabel>
             <Input onChange={e => setPassword(e.currentTarget.value)} placeholder="*******" variant="filled" mb={6} type="password" /> {isError ? (<FormHelperText>Entrez vos identifiants</FormHelperText>) : (<FormErrorMessage> Email is required </FormErrorMessage>) }
-            <Button type="submit" colorScheme="teal" isLoading={value}>Inscription</Button>
+            <Button type="submit" colorScheme="teal" isLoading={value} onClick={handleSubmit}>Inscription</Button>
           </Flex>
         </FormControl>
-        </form>
         </Flex>
     );
 }
