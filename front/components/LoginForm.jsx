@@ -1,5 +1,5 @@
-import { Button, Flex, Heading, Input, Box, useColorMode, useColorModeValue, IconButton, FormControl, FormHelperText, FormLabel, FormErrorMessage } from '@chakra-ui/react';
-import { MoonIcon, SunIcon} from '@chakra-ui/icons'
+import { Button, Flex, Heading, Input, InputLeftElement, Show, InputGroup, Box, useColorMode, useColorModeValue, IconButton, FormControl, FormHelperText, FormLabel, FormErrorMessage, VStack } from '@chakra-ui/react';
+import { EmailIcon,LockIcon, MoonIcon, SunIcon} from '@chakra-ui/icons'
 import {useState} from 'react';
 import {useRouter} from 'next/router';
 import ThemeToggler from './ThemeToggler';
@@ -16,8 +16,10 @@ export default function LoginForm(){
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const isInvalid = password === '' || email === '';
 
   const handleSubmit = async (event) => {
+    setValue(true);
     event.preventDefault;
 
     let response = await fetch('/api/signUp', {
@@ -39,19 +41,29 @@ export default function LoginForm(){
 
     return ( 
         <Flex height="60vh" alignItems="center" justifyContent="center" mt={100}>
-        <FormControl isRequired alignItems ="center" justifyContent="center" flexDirection="flex" alignSelf="center" width={350} isInvalid={isError}>
-          <Flex boxShadow="lg" direction="column" background={formBackground} p={12} rounded={6}>
+          <Flex boxShadow="lg" mt={50} direction="column" background={formBackground} p={10} rounded={6}>
           <ThemeToggler></ThemeToggler>
+            <FormControl>
             <Heading mb={6}>Inscription</Heading>
             <FormLabel>Entrez votre adresse mail</FormLabel>
-            <Input placeholder="aezeae@chakra-ui.com" variant="filled" mb={3} type="email" />
+            <InputGroup>
+              <InputLeftElement children={<EmailIcon/>}/>
+              <Input value={email} isRequired onChange={(e) => setEmail(e.currentTarget.value)} placeholder="adresse@mail.com" variant="filled" mb={3} type="email" />
+            </InputGroup>
             <FormLabel>Confirmez votre adresse mail</FormLabel>
-            <Input onChange={e => setEmail(e.currentTarget.value)} placeholder="aezeae@chakra-ui.com" variant="filled" mb={3} type="email" />
+            <InputGroup>
+              <InputLeftElement children={<EmailIcon/>}/>
+              <Input isRequired value={email} onChange={(e) => setEmail(e.currentTarget.value)} placeholder="adresse@mail.com" variant="filled" mb={3} type="email" />
+            </InputGroup>
             <FormLabel>Entrez votre mot de passe</FormLabel>
-            <Input onChange={e => setPassword(e.currentTarget.value)} placeholder="*******" variant="filled" mb={6} type="password" /> {isError ? (<FormHelperText>Entrez vos identifiants</FormHelperText>) : (<FormErrorMessage> Email is required </FormErrorMessage>) }
-            <Button type="submit" colorScheme="teal" isLoading={value} onClick={handleSubmit}>Inscription</Button>
+            <InputGroup>
+              <InputLeftElement children={<LockIcon/>}/>
+              <Input isRequired value={password} onChange={(e) => setPassword(e.currentTarget.value)} placeholder="*******" variant="filled" mb={5} type="password" />
+            </InputGroup>
+            </FormControl>
+              <Button disabled={isInvalid} type="submit" marginBottom={"10px"} colorScheme="teal" isLoading={value} onClick={handleSubmit}>Inscription</Button>
+              <Button colorScheme="teal" variant="outline" onClick={(e) => {router.push("/")} }>Déjà inscrit ?</Button>
           </Flex>
-        </FormControl>
         </Flex>
     );
 }

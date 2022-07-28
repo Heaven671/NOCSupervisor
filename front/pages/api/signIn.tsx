@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     console.log(userAccount)
     if(userAccount != null){
         argon2i.verify(userAccount.password, req.body.pass)
-        .then(succeed => {
+        .then( (succeed) => {
             if(succeed){
                 res.send({success: true, mail: req.body.mail})
             }
@@ -25,7 +25,6 @@ export default async function handler(req, res) {
         })
     }
     else {
-        res.send({success: false,
-        message: "Not existing account"});
+        res.status(500).send;
     }
 }
