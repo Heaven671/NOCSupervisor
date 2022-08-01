@@ -1,10 +1,10 @@
 import {Box,Skeleton,VStack,Flex,Stack} from '@chakra-ui/react'
-export default function Layout() {
+export default function Card(props) {
 
 
         return (
-        <Flex justifyContent='center'>
-          <Box border='1px solid' color="black" height='290px' p={6} width='100%' bg="gray.500" borderRadius='lg'>
+        <Flex mt={5} justifyContent='center'>
+          <Box border='1px solid' color="black" height='290px' p={6} width='100%' bg={props.bg} borderRadius='lg'>
             <Stack>
               <Skeleton height='20px' width='50px' />
               <Skeleton height='20px' />

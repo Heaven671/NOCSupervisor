@@ -7,13 +7,13 @@ const mainPage = () => {
             <div>
                 <NavBar/>
                 <Flex justifyContent="center" width="100%">
-                    <Grid width="80%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='30'>
-                        <GridItem color="blue">
-                            <Card/>
+                    <Grid width="80%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
+                        <GridItem>
+                            <Card bg="gray.700"/>
                         </GridItem>
-                        <GridItem bg="red" height="40vh"><Card/></GridItem>
-                        <GridItem bg="yellow" height="40vh"><Card/></GridItem>
-                        <GridItem bg="black" height="40vh"><Card/></GridItem>
+                        <GridItem height="40vh"><Card bg="none"/></GridItem>
+                        <GridItem height="40vh"><Card/></GridItem>
+                        <GridItem height="40vh"><Card/></GridItem>
 
                     </Grid>
                 </Flex>
