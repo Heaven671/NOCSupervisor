@@ -1,4 +1,4 @@
-import { Button, Flex, Heading,VStack, Input, InputLeftElement, InputGroup, useColorMode, FormLabel, useColorModeValue, IconButton, FormControl, FormHelperText, FormErrorMessage, InputRightElement} from '@chakra-ui/react';
+import { Button, Flex, Heading,VStack, Input, InputLeftElement, useToast, InputGroup, useColorMode, FormLabel, useColorModeValue, IconButton, FormControl, FormHelperText, FormErrorMessage, InputRightElement} from '@chakra-ui/react';
 import {SunIcon,LockIcon,EmailIcon,Icon, MoonIcon} from '@chakra-ui/icons';
 import {useState} from 'react';
 import {useRouter} from 'next/router';
@@ -18,6 +18,7 @@ const logInPage = () => {
   const isError = input === ''
   const isInvalid = password === '' || email === '';
   const router = useRouter();
+  const toast = useToast();
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -35,7 +36,14 @@ const logInPage = () => {
     })
     console.log(response)
     response.then(() => {
-      alert('yay')
+      toast({
+        title: 'Connexion réussie.',
+        description: "Chargement de la page en cours.",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      setValue(false);
       router.push("/mainPage")
     })
   }
