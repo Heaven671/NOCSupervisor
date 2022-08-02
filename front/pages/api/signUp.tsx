@@ -11,7 +11,7 @@ const cors = require('cors');
 
 export default async function handler(req, res) {
     console.log('0')
-    await mongoose.connect("mongodb://127.0.0.1:27017", {useNewUrlParser: true,
+    await mongoose.connect("mongodb://localhost:27017", {useNewUrlParser: true,
     useUnifiedTopology: true})
     .then((e) =>{
         console.log(`Connected to DB ${process.env.DB_URI}`);
