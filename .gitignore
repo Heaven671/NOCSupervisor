@@ -3,3 +3,4 @@ node_modules
 /front/./next/cache/
 package-lock.json
 front/package-lock.json
+node_modules
