@@ -2,7 +2,8 @@ var snmp = require('net-snmp')
 import {useState} from 'react';
 
 export default function handler(req,res){
-    var session = snmp.createSession("192.168.3.11", "public");
+    console.log(req.query)
+    var session = snmp.createSession(`${req.query.network}`, "public");
     var oids = ["1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.6.0"];
     var ret = [''];
     session.get (oids, function (error, varbinds) {

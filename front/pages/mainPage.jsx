@@ -8,12 +8,11 @@ const mainPage = () => {
     const [isData, setData] = useState('')
     const [isLoaded, setIsLoaded] = useState(false)
     useEffect(() => {
-        fetch('/api/snmp')
+        fetch(`/api/snmp?network=192.168.3.11`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data)
             setData(data);
-            isLoaded(true);
+            setIsLoaded(true);
         })
         .catch((e) => {
             console.error(e);
@@ -28,8 +27,8 @@ const mainPage = () => {
                     <Grid width="80%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
                         <GridItem>
                             <Card bg="gray.700" 
-                                isLoaded={isLoaded}>
-                                    <p>{isData}</p>
+                                isLoaded={isLoaded}
+                                data={isData}>
                             </Card>
                         </GridItem>
                         <GridItem height="40vh"><Card bg="none"/></GridItem>
