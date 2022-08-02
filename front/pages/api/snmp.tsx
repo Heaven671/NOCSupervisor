@@ -3,9 +3,9 @@ import {useState} from 'react';
 
 export default function handler(req,res){
     var session = snmp.createSession("192.168.3.11", "public");
-    var sysLocationOid = "1.3.6.1.2.1.1.6"
-
-    session.get (sysLocationOid, function (error, varbinds) {
+    var oids = ["1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.6.0"];
+    var ret = [''];
+    session.get (oids, function (error, varbinds) {
         if (error) {
             console.error (error);
         } else {
@@ -14,10 +14,10 @@ export default function handler(req,res){
                     console.error (snmp.varbindError (varbinds[i]));
                 } else {
                     console.log (varbinds[i].oid + " = " + varbinds[i].value);
-                    res.send(varbinds[i].value);
+                    ret[i] += varbinds[i].value;
                 }
             }
+            res.send(JSON.stringify(ret));
         }
-        session.close ();
     });
 }
