@@ -5,8 +5,10 @@ export default function handler(req,res){
     console.log(req.query)
     var session = snmp.createSession(`${req.query.network}`, "public");
     var oids = ["1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.6.0"];
+    //var sysUptime = ["1.3.6.1.4.1.2021.10.1.3.1"];
+    var oid = [`${req.query.oid}`];
     var ret = [''];
-    session.get (oids, function (error, varbinds) {
+    session.get (oid, function (error, varbinds) {
         if (error) {
             console.error (error);
         } else {
