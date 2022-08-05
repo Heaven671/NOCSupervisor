@@ -7,9 +7,13 @@ export default function Card(props) {
           <Box border='1px solid' color="black" height='290px' p={6} width='100%' bg={props.bg} borderRadius='lg'>
             <Stack>
               <SkeletonCircle></SkeletonCircle>
-              <SkeletonText fadeDuration={4} isLoaded mt={4} noOfLines={6} spacing={4}/>
+
+              <SkeletonText isLoaded fadeDuration={10} mt={4} noOfLines={2} spacing={4}>
                 <Text color={"gray.500"} fontSize='xs'>{"Equipement : " + props.name}</Text>
-                <Text color={"gray.500"} fontSize='xs'>{"Equipement : " + props.data}</Text>
+                <Text color={"gray.500"} fontSize='xs'>{"Contact : " + props.contact}</Text>
+                <Text color={"gray.500"} fontSize='xs'>{"Running since : " + props.uptime + " days"}</Text>
+              </SkeletonText>
+              <SkeletonCircle></SkeletonCircle>
             </Stack>
           </Box>
         </Flex>

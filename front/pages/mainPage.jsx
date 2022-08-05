@@ -1,21 +1,24 @@
 import Card from '../components/Card';
-import NavBar from '../components/NavBar'
+import NavBar from '../components/NavBar';
+import LineChart from '../components/LineChart';
 import Bar from 'react-chartjs-2'
 import {useState} from 'react';
 import {Box, Flex, Grid, GridItem} from '@chakra-ui/react'
 import { useEffect } from 'react';
 
+
 const mainPage = () => {    
     const [isName, setName] = useState('')
     const [isContact, setContact] = useState('')
-    const [isLoaded, setIsLoaded] = useState(false)
+    const [isUptime, setUptime] = useState('')
+    const [dataLoaded, setIsLoaded] = useState(false)
     const [chartData, setChartData] = useState({})
     useEffect(() => {
         fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.5.0`)
         .then((res) => res.json())
         .then((data) => {
             setName(data)
-            setIsLoaded(true);
+            setIsLoaded(false)
             console.log(data)
         })
         .catch((e) => {
@@ -27,8 +30,7 @@ const mainPage = () => {
         fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.4.0`)
         .then((res) => res.json())
         .then((data) => {
-            setName(data)
-            setIsLoaded(true);
+            setContact(data)
             console.log(data)
         })
         .catch((e) => {
@@ -36,32 +38,19 @@ const mainPage = () => {
             setName(e)
         })
     }, [])
-    /*useEffect(() => {
-        const fetchData = async () => {
-            const res = await fetch("/api/snmp?network=192.168.3.11?oid=1.3.6.1.2.1.25.1.1.0")
-            const data = await res.json();
-            const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
-
-            const datas = {
-                labels: days,
-                datasets: [
-                    {
-                        label: "hrSysUptime",
-                        data: data,
-                        backgroundColor: [
-                            "#ffbb11",
-                            "#ecf0f1",
-                            "#50AF95",
-                            "#f3ba2f",
-                            "#2a71d0"
-                        ]
-                    }
-
-                ]
-            }
-            setChartData(datas)
-        }
-    })*/
+    useEffect(() => {
+        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.3.0`)
+        .then((res) => res.json())
+        .then((data) => {
+            data = Math.round(data/8640000)
+            setUptime(data)
+            console.log(data)
+        })
+        .catch((e) => {
+            console.error(e);
+            setUptime(e)
+        })
+    }, [])
         return (
             <div>
                 <NavBar/>
@@ -69,12 +58,13 @@ const mainPage = () => {
                     <Grid width="80%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
                         <GridItem>
                             <Card bg="gray.700" 
-                                isLoaded={isLoaded}
+                                isLoaded={dataLoaded}
                                 name={isName}
-                                contact={isContact}>
+                                contact={isContact}
+                                uptime={isUptime}>
                             </Card>
                         </GridItem>
-                        <GridItem height="40vh"></GridItem>
+                        <GridItem height="40vh"><LineChart /></GridItem>
                         <GridItem height="40vh"></GridItem>
                         <GridItem height="40vh"></GridItem>
 
