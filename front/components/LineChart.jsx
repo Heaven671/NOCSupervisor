@@ -1,4 +1,4 @@
-import {fetchData} from './Data.jsx'
+import {fetchData} from './Data.jsx';
 import {useState, useEffect} from 'react';
 import Chart from "chart.js/auto";
 import {Line} from 'react-chartjs-2';
@@ -7,20 +7,19 @@ const LineChart = () => {
     const [isData, setData] = useState([]);
 
     const fetchApi = async () => {
-        setData(fetchData);
-        console.log(isData)
+        const data = await fetchData();
+        setData(data);
+        console.log("fetchData : " + data.data)
       };
 
       useEffect(() => {
         fetchApi();
       }, []);
 
-      const lineChart = isData[0] ? (
+      const lineChart = (
         <Line
         data={{
-            labels: isData.map(({ date }) =>
-              new Date(date).toLocaleDateString()
-            ),
+            labels: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],
             datasets: [
               {
                 data: isData,
@@ -31,7 +30,7 @@ const LineChart = () => {
             ],
           }}
         />
-      ) : null
+      )
 
   return (
     <>

@@ -14,12 +14,12 @@ const mainPage = () => {
     const [dataLoaded, setIsLoaded] = useState(false)
     const [chartData, setChartData] = useState({})
     useEffect(() => {
-        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.5.0`)
+        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.5.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
             setName(data)
             setIsLoaded(false)
-            console.log(data)
+            console.log("data :" + data)
         })
         .catch((e) => {
             console.error(e);
@@ -27,7 +27,7 @@ const mainPage = () => {
         })
     }, [])
     useEffect(() => {
-        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.4.0`)
+        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.4.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
             setContact(data)
@@ -39,10 +39,10 @@ const mainPage = () => {
         })
     }, [])
     useEffect(() => {
-        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.3.0`)
+        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.3.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
-            data = Math.round(data/8640000)
+            data = Math.ceil(data/8640000)
             setUptime(data)
             console.log(data)
         })
@@ -54,7 +54,7 @@ const mainPage = () => {
         return (
             <div>
                 <NavBar/>
-                <Flex justifyContent="center" width="100%">
+                <Flex justifyContent="center" width="80vw">
                     <Grid width="80%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
                         <GridItem>
                             <Card bg="gray.700" 
@@ -64,7 +64,7 @@ const mainPage = () => {
                                 uptime={isUptime}>
                             </Card>
                         </GridItem>
-                        <GridItem height="40vh"><LineChart /></GridItem>
+                        <GridItem height="40vh"><LineChart/></GridItem>
                         <GridItem height="40vh"></GridItem>
                         <GridItem height="40vh"></GridItem>
 
