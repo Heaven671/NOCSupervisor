@@ -27,7 +27,7 @@ export default function handler(req,res){
     }
     else if (req.query.req == 'walk'){
         console.log('waaaaaaalk');
-        ret = ['']
+        let ret = [''];
         function doneCb (error) {
             if (error)
                 console.error (error.toString ());
@@ -43,7 +43,41 @@ export default function handler(req,res){
             }
         }
         var maxRepetitions = 20;
-        session.walk (oid, maxRepetitions, feedCb, doneCb);
+        var oid2 = `${req.query.oid}`;
+        session.walk (oid2, maxRepetitions, feedCb, doneCb);
         res.send(JSON.stringify(ret))
+    }
+    else if (req.query.req == 'getNext'){
+        ret = ['']
+        var oid3 = [`${req.query.oid}`,'1.3.6.1.2.1.2.2.1.10.200']
+        var nonRepeaters = 0;
+        session.getBulk (oid3, nonRepeaters, function (error, varbinds) {
+            if (error) {
+                console.error (error.toString ());
+            } else {
+                // step through the non-repeaters which are single varbinds
+                for (var i = 0; i < nonRepeaters; i++) {
+                    if (i >= varbinds.length)
+                        break;
+
+                    if (snmp.isVarbindError (varbinds[i]))
+                        console.error (snmp.varbindError (varbinds[i]));
+                    else
+                        console.log (varbinds[i].oid + "|" + varbinds[i].value);
+                }
+
+                // then step through the repeaters which are varbind arrays
+                for (var i = nonRepeaters; i < varbinds.length; i++) {
+                    for (var j = 0; j < varbinds[i].length; j++) {
+                        if (snmp.isVarbindError (varbinds[i][j]))
+                            console.error (snmp.varbindError (varbinds[i][j]));
+                        else
+                            console.log (varbinds[i][j].oid + "|" + varbinds[i][j].value);
+                            ret += varbinds[i][j].value
+                    }
+                }
+            }
+        });
+        res.send(JSON.stringify(ret));
     }
 }
