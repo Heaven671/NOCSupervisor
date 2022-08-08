@@ -49,7 +49,7 @@ export default function handler(req,res){
     }
     else if (req.query.req == 'getNext'){
         ret = ['']
-        var oid3 = [`${req.query.oid}`,'1.3.6.1.2.1.2.2.1.10.200']
+        var oid3 = [`${req.query.oid}`]
         var nonRepeaters = 0;
         session.getBulk (oid3, nonRepeaters, function (error, varbinds) {
             if (error) {
@@ -72,12 +72,13 @@ export default function handler(req,res){
                         if (snmp.isVarbindError (varbinds[i][j]))
                             console.error (snmp.varbindError (varbinds[i][j]));
                         else
-                            console.log (varbinds[i][j].oid + "|" + varbinds[i][j].value);
+                            console.log (varbinds[i][j].oid + "=" + varbinds[i][j].value);
                             ret += varbinds[i][j].value
                     }
                 }
             }
         });
+        console.log(ret);
         res.send(JSON.stringify(ret));
     }
 }
