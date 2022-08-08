@@ -1,40 +1,72 @@
 import Card from '../components/Card';
-import NavBar from '../components/NavBar'
+import NavBar from '../components/NavBar';
+import LineChart from '../components/LineChart';
+import Bar from 'react-chartjs-2'
 import {useState} from 'react';
 import {Box, Flex, Grid, GridItem} from '@chakra-ui/react'
 import { useEffect } from 'react';
 
+
 const mainPage = () => {    
-    const [isData, setData] = useState('')
-    const [isLoaded, setIsLoaded] = useState(false)
+    const [isName, setName] = useState('')
+    const [isContact, setContact] = useState('')
+    const [isUptime, setUptime] = useState('')
+    const [dataLoaded, setIsLoaded] = useState(false)
+    const [chartData, setChartData] = useState({})
     useEffect(() => {
-        fetch('/api/snmp')
+        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.5.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data)
-            setData(data);
-            isLoaded(true);
+            setName(data)
+            setIsLoaded(false)
+            console.log("data :" + data)
         })
         .catch((e) => {
             console.error(e);
-            setData(e)
+            setName(e)
         })
     }, [])
-
+    useEffect(() => {
+        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.4.0&req=get`)
+        .then((res) => res.json())
+        .then((data) => {
+            setContact(data)
+            console.log(data)
+        })
+        .catch((e) => {
+            console.error(e);
+            setName(e)
+        })
+    }, [])
+    useEffect(() => {
+        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.3.0&req=get`)
+        .then((res) => res.json())
+        .then((data) => {
+            data = Math.ceil(data/8640000)
+            setUptime(data)
+            console.log(data)
+        })
+        .catch((e) => {
+            console.error(e);
+            setUptime(e)
+        })
+    }, [])
         return (
             <div>
                 <NavBar/>
-                <Flex justifyContent="center" width="100%">
+                <Flex justifyContent="center" width="80vw">
                     <Grid width="80%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
                         <GridItem>
                             <Card bg="gray.700" 
-                                isLoaded={isLoaded}>
-                                    <p>{isData}</p>
+                                isLoaded={dataLoaded}
+                                name={isName}
+                                contact={isContact}
+                                uptime={isUptime}>
                             </Card>
                         </GridItem>
-                        <GridItem height="40vh"><Card bg="none"/></GridItem>
-                        <GridItem height="40vh"><Card/></GridItem>
-                        <GridItem height="40vh"><Card/></GridItem>
+                        <GridItem height="40vh"><LineChart/></GridItem>
+                        <GridItem height="40vh"></GridItem>
+                        <GridItem height="40vh"></GridItem>
 
                     </Grid>
                 </Flex>
