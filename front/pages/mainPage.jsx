@@ -1,9 +1,10 @@
 import Card from '../components/Card';
 import NavBar from '../components/NavBar';
+import NavBar2 from '../components/NavBar2'
 import LineChart from '../components/LineChart';
 import Bar from 'react-chartjs-2'
 import {useState} from 'react';
-import {Box, Flex, Grid, GridItem} from '@chakra-ui/react'
+import {Box, Flex, Grid, GridItem, Center} from '@chakra-ui/react'
 import { useEffect } from 'react';
 
 
@@ -54,21 +55,25 @@ const mainPage = () => {
         return (
             <div>
                 <NavBar/>
+                <NavBar2/>
                 <Flex justifyContent="center" width="80vw">
-                    <Grid width="80%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
-                        <GridItem>
-                            <Card bg="gray.700" 
-                                isLoaded={dataLoaded}
-                                name={isName}
-                                contact={isContact}
-                                uptime={isUptime}>
-                            </Card>
-                        </GridItem>
-                        <GridItem height="40vh"><LineChart/></GridItem>
-                        <GridItem height="40vh"></GridItem>
-                        <GridItem height="40vh"></GridItem>
+                    <Center>
+                        <Grid  ml={'150px'} width="auto" maxHeight="auto" templateColumns='repeat(2, 1fr)' gap='5'>
+                            <GridItem>
+                                <Card bg="gray.700" 
+                                    isLoaded={dataLoaded}
+                                    name={isName}
+                                    contact={isContact}
+                                    uptime={isUptime}>
+                                </Card>
+                            </GridItem>
 
-                    </Grid>
+                            <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
+                            <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
+                            <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
+
+                        </Grid>
+                    </Center>
                 </Flex>
             </div>
         )
