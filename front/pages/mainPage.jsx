@@ -7,7 +7,17 @@ import {useState} from 'react';
 import {Box, Flex, Grid, GridItem, Center} from '@chakra-ui/react'
 import { useEffect } from 'react';
 
-
+// This gets called on every request
+export async function getServerSideProps({req,res}) {
+    // Fetch data from external API
+    res = await fetch("http://localhost:3000/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.2.2.1.10.10&req=walk")
+    const data = await res.json()
+    for(let keys in data)
+        console.log(data[keys] );
+    // Pass data to the page via props
+    return { props: { data } }
+}
+  
 const mainPage = () => {    
     const [isName, setName] = useState('')
     const [isContact, setContact] = useState('')
@@ -58,12 +68,12 @@ const mainPage = () => {
         })
     }, [])
         return (
-            <div>
+            <>
                 <NavBar/>
                 <NavBar2/>
-                <Flex justifyContent="center" width="80vw">
+                <Flex justifyContent="center" ml={0} width="auto">
                     <Center>
-                        <Grid  ml={'150px'} width="auto" maxHeight="auto" templateColumns='repeat(2, 1fr)' gap='5'>
+                        <Grid  ml={'15px'} width="100%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
                             <GridItem>
                                 <Card bg="gray.700" 
                                     isLoaded={dataLoaded}
@@ -80,7 +90,7 @@ const mainPage = () => {
                         </Grid>
                     </Center>
                 </Flex>
-            </div>
+            </>
         )
 }
 

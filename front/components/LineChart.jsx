@@ -3,15 +3,12 @@ import {useState, useEffect} from 'react';
 import Chart from "chart.js/auto";
 import {Line} from 'react-chartjs-2';
 
-const LineChart = () => {
+const LineChart = (props) => {
     const [isData, setData] = useState([]);
-
     const fetchApi = async () => {
-        const data = await fetchData();
-        setData(data);
-        console.log("fetchData : " + data.data)
-      };
-
+      let data = await fetchData;
+      console.log("dataaaa: "+ data)
+    }
       useEffect(() => {
         fetchApi();
       }, []);
@@ -38,4 +35,5 @@ const LineChart = () => {
     </>
   );
 }
+
 export default LineChart;
