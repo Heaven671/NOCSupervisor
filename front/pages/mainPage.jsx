@@ -69,11 +69,10 @@ const mainPage = () => {
     }, [])
         return (
             <>
-                <NavBar/>
                 <NavBar2/>
                 <Flex justifyContent="center" ml={0} width="auto">
                     <Center>
-                        <Grid  ml={'15px'} width="100%" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
+                        <Grid width="auto" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
                             <GridItem>
                                 <Card bg="gray.700" 
                                     isLoaded={dataLoaded}
