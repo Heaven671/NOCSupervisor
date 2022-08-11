@@ -1,4 +1,4 @@
-import { Button, Flex, Heading,VStack, Input, InputLeftElement, InputGroup, useColorMode, FormLabel, useColorModeValue, IconButton, FormControl, FormHelperText, FormErrorMessage, InputRightElement} from '@chakra-ui/react';
+import { Button, Flex, Heading,VStack, Input, InputLeftElement, useToast, InputGroup, useColorMode, FormLabel, useColorModeValue, IconButton, FormControl, FormHelperText, FormErrorMessage, InputRightElement} from '@chakra-ui/react';
 import {SunIcon,LockIcon,EmailIcon,Icon, MoonIcon} from '@chakra-ui/icons';
 import {useState} from 'react';
 import {useRouter} from 'next/router';
@@ -9,6 +9,7 @@ import ThemeToggler from '../components/ThemeToggler'
 const logInPage = () => {
   const { toggleColorMode } = useColorMode()
   const formBackground = useColorModeValue("gray.100", "gray.700")
+  const color = useColorModeValue('gray.800', '#41729F')
   const [value, setValue] = useState(false);
   const [click, setClickValue] = useState(false);
   const [email, setEmail] = useState('');
@@ -18,6 +19,7 @@ const logInPage = () => {
   const isError = input === ''
   const isInvalid = password === '' || email === '';
   const router = useRouter();
+  const toast = useToast();
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -35,13 +37,20 @@ const logInPage = () => {
     })
     console.log(response)
     response.then(() => {
-      alert('yay')
+      toast({
+        title: 'Connexion réussie.',
+        description: "Chargement de la page en cours.",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      setValue(false);
       router.push("/mainPage")
     })
   }
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
-        <Flex boxShadow="lg" direction="column" background={formBackground} p={12} rounded={6}>
+        <Flex boxShadow="lg" direction="column" bg={formBackground} p={12} rounded={6}>
         <ThemeToggler></ThemeToggler>
           <Heading mb={6}>Connexion</Heading>
           <FormLabel>Adresse mail</FormLabel>

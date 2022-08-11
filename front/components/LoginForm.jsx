@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Input, InputLeftElement, Show, InputGroup, Box, useColorMode, useColorModeValue, IconButton, FormControl, FormHelperText, FormLabel, FormErrorMessage, VStack } from '@chakra-ui/react';
+import { Button, Flex, Heading, Input, InputLeftElement, useToast, Show, InputGroup, Box, useColorMode, useColorModeValue, IconButton, FormControl, FormHelperText, FormLabel, FormErrorMessage, VStack } from '@chakra-ui/react';
 import { EmailIcon,LockIcon, MoonIcon, SunIcon} from '@chakra-ui/icons'
 import {useState} from 'react';
 import {useRouter} from 'next/router';
@@ -17,7 +17,7 @@ export default function LoginForm(){
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const isInvalid = password === '' || email === '';
-
+  const toast = useToast();
   const handleSubmit = async (event) => {
     setValue(true);
     event.preventDefault;
@@ -28,6 +28,16 @@ export default function LoginForm(){
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({mail: email, pass: password })
+    })
+    .then(()=>{
+      toast({
+        title: 'Inscription réussie.',
+        description: "Veuillez vous connecter.",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      setValue(false);
     })
     .catch((e) => {
       console.log('error: ');
