@@ -9,6 +9,7 @@ import ThemeToggler from '../components/ThemeToggler'
 const logInPage = () => {
   const { toggleColorMode } = useColorMode()
   const formBackground = useColorModeValue("gray.100", "gray.700")
+  const color = useColorModeValue('gray.800', '#41729F')
   const [value, setValue] = useState(false);
   const [click, setClickValue] = useState(false);
   const [email, setEmail] = useState('');
@@ -49,7 +50,7 @@ const logInPage = () => {
   }
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
-        <Flex boxShadow="lg" direction="column" background={formBackground} p={12} rounded={6}>
+        <Flex boxShadow="lg" direction="column" bg={formBackground} p={12} rounded={6}>
         <ThemeToggler></ThemeToggler>
           <Heading mb={6}>Connexion</Heading>
           <FormLabel>Adresse mail</FormLabel>

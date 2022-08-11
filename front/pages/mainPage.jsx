@@ -7,30 +7,27 @@ import {useState} from 'react';
 import {Box, Flex, Grid, GridItem, Center} from '@chakra-ui/react'
 import { useEffect } from 'react';
 
-// This gets called on every request
-export async function getServerSideProps({req,res}) {
-    // Fetch data from external API
-    res = await fetch("http://localhost:3000/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.2.2.1.10.10&req=walk")
-    const data = await res.json()
-    for(let keys in data)
-        console.log(data[keys] );
-    // Pass data to the page via props
-    return { props: { data } }
-}
   
 const mainPage = () => {    
     const [isName, setName] = useState('')
     const [isContact, setContact] = useState('')
     const [isUptime, setUptime] = useState('')
+    const [isData, setData] = useState('')
     const [dataLoaded, setDataLoaded] = useState(false)
     const [chartData, setChartData] = useState({})
     useEffect(() => {
         fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.5.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
-            setName(data)
+            let value = [""];
+            for(let i = 0; i < data.data.length; ++i){
+                value[i] = String.fromCharCode(data.data[i])
+            }
+            value = value.join("");
+            setName(value)
             setDataLoaded(true)
-            console.log("data :" + data)
+            console.log(typeof(value))
+            console.log("data :" + value)
         })
         .catch((e) => {
             console.error(e);
@@ -42,9 +39,14 @@ const mainPage = () => {
         fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.4.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
-            setContact(data)
+            let value = [""];
+            for(let i = 0; i < data.data.length; ++i){
+                value[i] = String.fromCharCode(data.data[i])
+            }
+            value = value.join("");
+            setContact(value)
             setDataLoaded(true)
-            console.log(data)
+            console.log(value)
         })
         .catch((e) => {
             console.error(e);
@@ -67,12 +69,24 @@ const mainPage = () => {
             setUptime(e)
         })
     }, [])
+
+    useEffect(() => {
+        fetch("/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.2.2.1.10.10&req=walk")
+        .then((res) => res.json())
+        .then((data) => {
+            setData(data);
+            console.log("data from walk : " + data)
+        })
+        .catch((e) => {
+            setData(e)
+        })
+    })
         return (
             <>
                 <NavBar2/>
                 <Flex justifyContent="center" ml={0} width="auto">
                     <Center>
-                        <Grid width="auto" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
+                        <Grid p={100} width="auto" maxHeight="300px" templateColumns='repeat(2, 1fr)' gap='5'>
                             <GridItem>
                                 <Card bg="gray.700" 
                                     isLoaded={dataLoaded}

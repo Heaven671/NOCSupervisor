@@ -4,7 +4,6 @@ import Chart from "chart.js/auto";
 import {Line} from 'react-chartjs-2';
 
 const LineChart = (props) => {
-    const [isData, setData] = useState([]);
     const fetchApi = async () => {
       let data = await fetchData;
       console.log("dataaaa: "+ data)
@@ -19,7 +18,7 @@ const LineChart = (props) => {
             labels: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],
             datasets: [
               {
-                data: isData,
+                data: props.isData,
                 label: "IfOutOctets",
                 borderColor: "rgb(0, 217, 255)",
                 fill: true,

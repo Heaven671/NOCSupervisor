@@ -7,7 +7,7 @@ export default function handler(req,res){
     var oids = ["1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.6.0"];
     //var sysUptime = ["1.3.6.1.4.1.2021.10.1.3.1"];
     var oid = [`${req.query.oid}`];
-    let ret = [];
+    let ret = {};
     if(req.query.req == 'get'){
         session.get (oid, function (error, varbinds) {
             if (error) {
@@ -18,10 +18,7 @@ export default function handler(req,res){
                         console.error (snmp.varbindError (varbinds[i]));
                     } else {
                         console.log (varbinds[i].oid + " = " + varbinds[i].value);
-                        ret = [{
-                            "oid": varbinds[i].oid,
-                            "value": varbinds[i].value
-                        }]
+                        ret = varbinds[i].value; 
                     }
                 }
                 res.send(JSON.stringify(ret));
@@ -56,7 +53,7 @@ export default function handler(req,res){
         var maxRepetitions = 1;
         var oid2 = `${req.query.oid}`;
         session.walk (oid2, maxRepetitions, feedCb, doneCb);
-        res.status(200).send(ret);
+
     }
     else if (req.query.req == 'getNext'){
         ret = ['']
