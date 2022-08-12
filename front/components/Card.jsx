@@ -1,4 +1,4 @@
-import {Box,Skeleton,SkeletonText,SkeletonCircle,VStack, Circle, Flex,Stack,Icon,Text,Center,Heading} from '@chakra-ui/react'
+import {Box,Skeleton,SkeletonText,SkeletonCircle,VStack, Circle, Flex,Stack,Icon,Text,Center,Heading,Tag} from '@chakra-ui/react'
 import {useState} from 'react'
 import {FcOk} from 'react-icons/fc'
 import {AiOutlineClose} from 'react-icons/ai'
@@ -14,7 +14,7 @@ export default function Card(props) {
                 <Text color={"gray.500"} fontSize='lg'>{"Contact : "} <Text as="u">{props.contact}</Text></Text>
                 <Text color={"gray.500"} fontSize='lg'>{"Running since : "} <Text as="u">{props.uptime + " days"}</Text> </Text>
               </SkeletonText>
-              <Flex mt={"50px"} justifyContent="flex-end"><SkeletonCircle isLoaded={props.isLoaded}><Icon as={props.icon} w={10} h={10}></Icon></SkeletonCircle></Flex>
+              <Flex mt={"50px"} justifyContent="flex-end"><Tag ml="5px">En ligne</Tag><SkeletonCircle isLoaded={props.isLoaded}><Icon as={props.icon} w={10} h={10}></Icon></SkeletonCircle></Flex>
             </Stack>
           </Box>
         </Flex>

@@ -19,7 +19,7 @@ const mainPage = () => {
     const [dataLoaded, setDataLoaded] = useState(false)
     const [chartData, setChartData] = useState({})
     useEffect(() => {
-        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.5.0&req=get`)
+        fetch(`/api/snmp?network=127.0.0.1&oid=1.3.6.1.2.1.1.5.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
             let value = [""];
@@ -39,7 +39,7 @@ const mainPage = () => {
         })
     }, [])
     useEffect(() => {
-        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.4.0&req=get`)
+        fetch(`/api/snmp?network=127.0.0.1&oid=1.3.6.1.2.1.1.4.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
             let value = [""];
@@ -58,7 +58,7 @@ const mainPage = () => {
         })
     }, [])
     useEffect(() => {
-        fetch(`/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.1.3.0&req=get`)
+        fetch(`/api/snmp?network=127.0.0.1&oid=1.3.6.1.2.1.1.3.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
             data = Math.ceil(data/8640000)
@@ -75,8 +75,8 @@ const mainPage = () => {
         })
     }, [])
 
-    useEffect(() => {
-        fetch("/api/snmp?network=192.168.3.11&oid=1.3.6.1.2.1.2.2.1.10.10&req=walk")
+    /*useEffect(() => {
+        fetch("/api/snmp?network=127.0.0.1&oid=1.3.6.1.2.1.2.2.1.10.10&req=walk")
         .then((res) => res.json())
         .then((data) => {
             setData(data);
@@ -85,7 +85,7 @@ const mainPage = () => {
         .catch((e) => {
             setData(e)
         })
-    }, [])
+    }, [])*/
 
         return (
             <>
