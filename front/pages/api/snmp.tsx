@@ -1,7 +1,6 @@
 var snmp = require('net-snmp');
-import {useState} from 'react';
 
-export default function handler(req,res){
+export default async function handler(req,res){
     console.log(req.query)
     var session = snmp.createSession(`${req.query.network}`, "public");
     var oids = ["1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.6.0"];
@@ -27,7 +26,7 @@ export default function handler(req,res){
     }
     else if (req.query.req == 'walk'){
         console.log('waaaaaaalk');
-        let ret = [];
+        let ret = [{}];
 
         function doneCb (error) {
             if (error)
@@ -38,9 +37,10 @@ export default function handler(req,res){
             for (var i = 0; i < varbinds.length; i++) {
                 if (snmp.isVarbindError (varbinds[i]))
                     console.error (snmp.varbindError (varbinds[i]));
-                else
+                else {
                     if(varbinds[i].oid == '1.3.6.1.2.1.2.2.1.10.200'){
                         session.close();
+                        res.send(ret);
                         break;
                     }
                     ret.push([{
@@ -48,12 +48,12 @@ export default function handler(req,res){
                         "value": varbinds[i].value
                     }])
                     console.log (varbinds[i].oid + "|" + varbinds[i].value);
+                }
             }
         }
         var maxRepetitions = 1;
         var oid2 = `${req.query.oid}`;
-        session.walk (oid2, maxRepetitions, feedCb, doneCb);
-
+        session.walk (oid2, maxRepetitions, feedCb, doneCb)
     }
     else if (req.query.req == 'getNext'){
         ret = ['']

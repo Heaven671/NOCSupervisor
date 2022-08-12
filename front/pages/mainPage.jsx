@@ -6,9 +6,12 @@ import Bar from 'react-chartjs-2'
 import {useState} from 'react';
 import {Box, Flex, Grid, GridItem, Center} from '@chakra-ui/react'
 import { useEffect } from 'react';
+import {FcOk} from 'react-icons/fc'
+import {AiOutline} from 'react-icons/ai'
 
-  
+
 const mainPage = () => {    
+    const [showStatus, setStatus] = useState(false)
     const [isName, setName] = useState('')
     const [isContact, setContact] = useState('')
     const [isUptime, setUptime] = useState('')
@@ -61,12 +64,14 @@ const mainPage = () => {
             data = Math.ceil(data/8640000)
             setUptime(data)
             setDataLoaded(true)
+            setStatus(true);
             console.log(data)
         })
         .catch((e) => {
             console.error(e);
             setDataLoaded(false)
             setUptime(e)
+            setStatus(false)
         })
     }, [])
 
@@ -80,7 +85,8 @@ const mainPage = () => {
         .catch((e) => {
             setData(e)
         })
-    })
+    }, [])
+
         return (
             <>
                 <NavBar2/>
@@ -92,11 +98,12 @@ const mainPage = () => {
                                     isLoaded={dataLoaded}
                                     name={isName}
                                     contact={isContact}
-                                    uptime={isUptime}>
+                                    uptime={isUptime}
+                                    icon={showStatus ? FcOk : AiOutline}>
                                 </Card>
                             </GridItem>
 
-                            <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
+                            <GridItem mt={50} ml={10} height="40vh"><LineChart data={isData}/></GridItem>
                             <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
                             <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
 
