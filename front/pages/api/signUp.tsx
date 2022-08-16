@@ -1,13 +1,10 @@
 var dotenv = require('dotenv/config');
-var csurf = require('csurf')
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken');
 var snmp = require ("net-snmp");
 var mongoose = require("mongoose");
 const argon2i = require('argon2-ffi').argon2i;
 const crypto = require('crypto')
 var userSchema = require("../../models/user.js");
-const cors = require('cors');
 
 export default async function handler(req, res) {
     console.log('0')
@@ -42,7 +39,10 @@ export default async function handler(req, res) {
                         console.log("2-a")
                         if(doc == null){
                             const newUser = await userModel.save();
-                            res.send({success: true})
+                            const token = jwt.sign({sub: userSchema.__v}, process.env.JWT_SECRET, {expiresIn: '7d'});
+                            res.status(200).send({success: true,
+                                      id: userSchema.__v,
+                                      token})
                         }
                         else {
                             res.send({success: false,

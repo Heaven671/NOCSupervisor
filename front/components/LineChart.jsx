@@ -4,21 +4,14 @@ import Chart from "chart.js/auto";
 import {Line} from 'react-chartjs-2';
 
 const LineChart = (props) => {
-    const fetchApi = async () => {
-      let data = await fetchData;
-      console.log("dataaaa: "+ data)
-    }
-      useEffect(() => {
-        fetchApi();
-      }, []);
 
       const lineChart = (
         <Line
         data={{
-            labels: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],
+            labels: [''],
             datasets: [
               {
-                data: props.isData,
+                data: "",
                 label: "IfOutOctets",
                 borderColor: "rgb(0, 217, 255)",
                 fill: true,

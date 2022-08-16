@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
 const argon2i = require('argon2-ffi').argon2i;
 const userSchema = require("../../models/user.js");
+const jwt = require('jsonwebtoken');
+var dotenv = require('dotenv/config');
+import getConfig from 'next/config';
+import { apiHandler } from 'helpers/api';
 
+const { serverRuntimeConfig } = getConfig();
 export default async function handler(req, res) {
     var userAccount;
     await mongoose.connect("mongodb://127.0.0.1:27017", {useNewUrlParser: true,
@@ -21,7 +26,12 @@ export default async function handler(req, res) {
         argon2i.verify(userAccount.password, req.body.pass)
         .then( (succeed) => {
             if(succeed){
-                res.send({success: true, mail: req.body.mail})
+                const token = jwt.sign({sub: userAccount.__v}, process.env.JWT_SECRET, {expiresIn: '7d'});
+                res.status(200).send({success: true, 
+                          mail: req.body.mail,
+                          id: userAccount.__v,
+                          token
+                        })
             }
             else{
                 res.send({success: false, message: "Error verifying account"});

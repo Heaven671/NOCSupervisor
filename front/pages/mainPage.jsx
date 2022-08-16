@@ -8,7 +8,7 @@ import {Box, Flex, Grid, GridItem, Center} from '@chakra-ui/react'
 import { useEffect } from 'react';
 import {FcOk} from 'react-icons/fc'
 import {AiOutline} from 'react-icons/ai'
-
+import {Auth} from './_app';
 
 const mainPage = () => {    
     const [showStatus, setStatus] = useState(false)
@@ -18,6 +18,11 @@ const mainPage = () => {
     const [isData, setData] = useState('')
     const [dataLoaded, setDataLoaded] = useState(false)
     const [chartData, setChartData] = useState({})
+
+    let arr = [];
+
+    Auth();
+
     useEffect(() => {
         fetch(`/api/snmp?network=127.0.0.1&oid=1.3.6.1.2.1.1.5.0&req=get`)
         .then((res) => res.json())
@@ -38,6 +43,7 @@ const mainPage = () => {
             setDataLoaded(false)
         })
     }, [])
+
     useEffect(() => {
         fetch(`/api/snmp?network=127.0.0.1&oid=1.3.6.1.2.1.1.4.0&req=get`)
         .then((res) => res.json())
@@ -75,18 +81,6 @@ const mainPage = () => {
         })
     }, [])
 
-    /*useEffect(() => {
-        fetch("/api/snmp?network=127.0.0.1&oid=1.3.6.1.2.1.2.2.1.10.10&req=walk")
-        .then((res) => res.json())
-        .then((data) => {
-            setData(data);
-            console.log("data from walk : " + data)
-        })
-        .catch((e) => {
-            setData(e)
-        })
-    }, [])*/
-
         return (
             <>
                 <NavBar2/>
@@ -103,9 +97,9 @@ const mainPage = () => {
                                 </Card>
                             </GridItem>
 
-                            <GridItem mt={50} ml={10} height="40vh"><LineChart data={isData}/></GridItem>
                             <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
-                            <GridItem mt={50} ml={10} height="40vh"><LineChart/></GridItem>
+                            <GridItem mt={50} ml={10} height="40vh"></GridItem>
+                            <GridItem mt={50} ml={10} height="40vh"></GridItem>
 
                         </Grid>
                     </Center>
