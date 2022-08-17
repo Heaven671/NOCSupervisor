@@ -1,31 +1,72 @@
-import { Doughnut } from "react-chartjs-2";
+import { Pie, PolarArea,Doughnut } from "react-chartjs-2";
+import { FcPrevious } from "react-icons/fc";
 
+Object.size = function(obj) {
+    var size = 0,
+      key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+  };
+  
 const DoughnutChart = (props) => {
     let values = [];
     let labels = [];
+    let used = [];
+    let str = [''];
+
     let string = props.label;
-    for(let i = 0; i < props.data.length; ++i){
+    for(let i = 0; i < Object.size(props.data); ++i){
       values.push(props.data[i].value)
-      labels.push(props.data[i].oid)
+    }
+
+    for(let i = 0; i < Object.size(props.labeldata); ++i){
+      labels.push(props.labeldata[i].value)
+      console.log("label push" + props.labeldata);
+    }
+
+    for(let i = 0; i < Object.size(props.data); ++i){
+        
+        used.push((values[i] / labels[i] * 100) == Infinity ? 0 :  (labels[i] / values[i]) * 100)
+        console.log("used push" + used);
+    }
+
+    let size = Object.size(props.data);
+    for(let i = 0; i < size; ++i){
+        str[i] = `Partition ${i}`;
     }
 
     const DonutChart = (
         <Doughnut
             data = {{
-                labels: ['Interface 1','Interface 2','Interface 3'],
+                labels: str,
                 datasets: [
                     {
-                      data: values,
+                      data: used,
                       label: string,
                       fill: true,
-                      hoverOffset: 4,
+                      hoverOffset: 10,
                       backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        '#002B5B',
+                        '#2B4865',
+                        '#256D85',
+                        '#8FE3CF'
                       ],
                     },
-                ]
+                ],
+                spacing: 3
+        
+            }}
+            options = {{
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: props.title,
+                        color: "white"
+                    }
+                }
             }}
         />
         )

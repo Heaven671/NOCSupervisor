@@ -14,19 +14,35 @@ Object.size = function(obj) {
 };
 
 
-function LineChart(props) {
-  let values = [];
+function MultiLineChart(props) {
+  let dt1 = [];
+  let dt2 = [];
+  let dt3 = [];
+
+  let lb1 = [];
+  let lb2 = [];
+  let lb3 = [];
+
   let labels = [''];
-  console.log("props.labeldata" + props.labeldata)
   //console.log("data value" + Object.values(props.data))
-  for(let i = 0; i < Object.size(props.data); ++i){
-    values.push(props.data[i].value)
+  for(let i = 0; i < Object.size(props.firstDataset); ++i){
+    dt1.push(props.firstDataset[i].value)
+    lb1.push(props.firstDataset[i].oid)
+    console.log("DT1 : "+ dt1)
+  }
+  for(let i = 0; i < Object.size(props.secondDataset); ++i){
+    dt2.push(props.secondDataset[i].value)
+    lb2.push(props.secondDataset[i].oid)
+  }
+  for(let i = 0; i < Object.size(props.thirdDataset); ++i){
+    dt3.push(props.thirdDataset[i].value)
+    lb3.push(props.thirdDataset[i].oid)
   }
 
   for(let i =0; i< Object.size(props.labeldata); ++i){
     labels.push(props.labeldata[i].value)
   }
-  
+
   return (
     <>
       <Line
@@ -34,11 +50,17 @@ function LineChart(props) {
             labels: labels,
             datasets: [
               {
-                data: values,
-                label: props.label,
+                data: dt1,
+                label: ['IN (Octets)'],
                 borderColor: "rgb(0, 217, 255)",
                 backgroundColor: "#8FE3CF"
               },
+              {
+                data: dt2,
+                label: ['OUT (Octets)'],
+                borderColor: "#D61C4E",
+                backgroundColor: "#D61C4E"
+              }
             ]
           }}
           options ={{
@@ -56,4 +78,4 @@ function LineChart(props) {
   );
 }
 
-export default LineChart;
+export default MultiLineChart;

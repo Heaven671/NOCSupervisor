@@ -8,6 +8,7 @@ const Card = (props) => {
         const [isLoaded, setLoading] = useState(false)
         let hours, minutes, seconds;
         let name = [];
+        console.log("UPTIME" + props.uptime)
         hours = Math.ceil((props.uptime / 360000))
         minutes = Math.ceil((props.uptime / 6000))
         seconds = Math.ceil((props.uptime / 100))
