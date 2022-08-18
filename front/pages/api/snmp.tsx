@@ -1,7 +1,6 @@
 var snmp = require('net-snmp');
 
 export default async function handler(req,res){
-    console.log(req.query)
     var session = snmp.createSession(`${req.query.network}`, "public");
     var oids = ["1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.6.0"];
     //var sysUptime = ["1.3.6.1.4.1.2021.10.1.3.1"];
@@ -17,7 +16,7 @@ export default async function handler(req,res){
                         console.error (snmp.varbindError (varbinds[i]));
                     } else {
                         let response = (varbinds[i].value).toString()
-                        console.log (varbinds[i].oid + " = " + varbinds[i].value);
+                        //console.log (varbinds[i].oid + " = " + varbinds[i].value);
                         ret.push({
                             "oid": varbinds[i].oid,
                             "value": response
@@ -28,8 +27,31 @@ export default async function handler(req,res){
             }
         });
     }
+    if(req.query.req == 'getData'){
+        session.get (oid, function (error, varbinds) {
+            if (error) {
+                console.error (error);
+            } else {
+                for (var i = 0; i < varbinds.length; i++) {
+                    if (snmp.isVarbindError (varbinds[i])) {
+                        console.error (snmp.varbindError (varbinds[i]));
+                    } else {
+                        let response = (varbinds[i].value).toString()
+                        let oid = varbinds[i].oid;
+                        //console.log (varbinds[i].oid + " = " + varbinds[i].value);
+                        for(let j = 0; j < 10; ++i){
+                            ret.push({
+                                "oid": oid,
+                                "value": response
+                            })
+                        }
+                    }
+                }
+                res.send(ret);
+            }
+        });
+    }
     else if (req.query.req == 'walk'){
-        console.log('waaaaaaalk');
         let ret = [];
 
         function doneCb (error) {
@@ -51,7 +73,7 @@ export default async function handler(req,res){
                         "oid": varbinds[i].oid,
                         "value": varbinds[i].value instanceof Object ? varbinds[i].value.toString()  : varbinds[i].value
                     })
-                    console.log (varbinds[i].oid + "|" + varbinds[i].value);
+                    //console.log (varbinds[i].oid + "|" + varbinds[i].value);
                 }
             }
         }
@@ -90,7 +112,6 @@ export default async function handler(req,res){
                 }
             }
         });
-        console.log(ret);
         res.send(JSON.stringify(ret));
     }
 }

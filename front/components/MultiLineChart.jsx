@@ -25,10 +25,9 @@ function MultiLineChart(props) {
 
   let labels = [''];
   //console.log("data value" + Object.values(props.data))
-  for(let i = 0; i < Object.size(props.firstDataset); ++i){
+  /*for(let i = 0; i < Object.size(props.firstDataset); ++i){
     dt1.push(props.firstDataset[i].value)
     lb1.push(props.firstDataset[i].oid)
-    console.log("DT1 : "+ dt1)
   }
   for(let i = 0; i < Object.size(props.secondDataset); ++i){
     dt2.push(props.secondDataset[i].value)
@@ -37,7 +36,7 @@ function MultiLineChart(props) {
   for(let i = 0; i < Object.size(props.thirdDataset); ++i){
     dt3.push(props.thirdDataset[i].value)
     lb3.push(props.thirdDataset[i].oid)
-  }
+  }*/
 
   for(let i =0; i< Object.size(props.labeldata); ++i){
     labels.push(props.labeldata[i].value)
@@ -48,20 +47,7 @@ function MultiLineChart(props) {
       <Line
         data={{
             labels: labels,
-            datasets: [
-              {
-                data: dt1,
-                label: ['IN (Octets)'],
-                borderColor: "rgb(0, 217, 255)",
-                backgroundColor: "#8FE3CF"
-              },
-              {
-                data: dt2,
-                label: ['OUT (Octets)'],
-                borderColor: "#D61C4E",
-                backgroundColor: "#D61C4E"
-              }
-            ]
+            datasets: props.data
           }}
           options ={{
             responsive: true,

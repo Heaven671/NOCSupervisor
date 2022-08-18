@@ -17,7 +17,6 @@ Object.size = function(obj) {
 function LineChart(props) {
   let values = [];
   let labels = [''];
-  console.log("props.labeldata" + props.labeldata)
   //console.log("data value" + Object.values(props.data))
   for(let i = 0; i < Object.size(props.data); ++i){
     values.push(props.data[i].value)

@@ -23,13 +23,11 @@ const DoughnutChart = (props) => {
 
     for(let i = 0; i < Object.size(props.labeldata); ++i){
       labels.push(props.labeldata[i].value)
-      console.log("label push" + props.labeldata);
     }
 
     for(let i = 0; i < Object.size(props.data); ++i){
         
         used.push((values[i] / labels[i] * 100) == Infinity ? 0 :  (labels[i] / values[i]) * 100)
-        console.log("used push" + used);
     }
 
     let size = Object.size(props.data);
