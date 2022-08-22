@@ -15,25 +15,45 @@ const DoughnutChart = (props) => {
     let labels = [];
     let used = [];
     let str = [''];
-
+    console.log("props : "+ JSON.stringify(props))
     let string = props.label;
-    for(let i = 0; i < Object.size(props.data); ++i){
-      values.push(props.data[i].value)
+
+
+    if(props.options == 1){
+
+      for(let i = 0; i < Object.size(props.data); ++i){
+        values.push(props.data[i].value)
+      }
+
+      for(let i = 0; i < Object.size(props.labeldata); ++i){
+        labels.push(props.labeldata[i].value)
+      }
+  
+      for(let i = 0; i < Object.size(props.data); ++i){
+          used.push((values[i] / labels[i] * 100) == Infinity ? 0 :  (labels[i] / values[i]) * 100)
+      }
+
+      let size = Object.size(props.data);
+      for(let i = 0; i < size; ++i){
+          str[i] = `Partition ${i}`;
+      }
+
+    }
+    if(props.options == 0){
+      for(let i = 0; i < Object.size(props.data);++i){
+        used.push(props.data[i].value)
+      }
+      for(let i = 0; i < Object.size(props.data2);++i){
+        used.push(props.data2[i].value)
+      }
+      for(let i = 0; i < Object.size(props.data3); ++i){
+        used.push(props.data3[i].value)
+      }
+      str = ["Memoire totale", "Memoire utilisée", "Memoire libre"]
+
     }
 
-    for(let i = 0; i < Object.size(props.labeldata); ++i){
-      labels.push(props.labeldata[i].value)
-    }
 
-    for(let i = 0; i < Object.size(props.data); ++i){
-        
-        used.push((values[i] / labels[i] * 100) == Infinity ? 0 :  (labels[i] / values[i]) * 100)
-    }
-
-    let size = Object.size(props.data);
-    for(let i = 0; i < size; ++i){
-        str[i] = `Partition ${i}`;
-    }
 
     const DonutChart = (
         <Doughnut
@@ -45,12 +65,7 @@ const DoughnutChart = (props) => {
                       label: string,
                       fill: true,
                       hoverOffset: 10,
-                      backgroundColor: [
-                        '#002B5B',
-                        '#2B4865',
-                        '#256D85',
-                        '#8FE3CF'
-                      ],
+                      backgroundColor: props.bg,
                     },
                 ],
                 spacing: 3

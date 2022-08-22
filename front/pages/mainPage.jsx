@@ -4,6 +4,7 @@ import NavBar2 from '../components/NavBar2'
 import LineChart from '../components/LineChart';
 import DoughnutChart from '../components/DoughnutChart';
 import MultiLineChart from '../components/MultiLineChart';
+import PieChart from '../components/PieChart'
 import ModalBox from '../components/ModalBox';
 import Bar from 'react-chartjs-2'
 import {useState} from 'react';
@@ -14,6 +15,8 @@ import {FcOk} from 'react-icons/fc'
 import {AiOutline} from 'react-icons/ai'
 import {Auth} from './_app';
 import {Layout} from '../components/Layout'
+import { useRouter } from 'next/router';
+
 
 Object.size = function(obj) {
     var size = 0,
@@ -24,7 +27,10 @@ Object.size = function(obj) {
     return size;
   };
 
+
 const mainPage = () => {    
+    const router = useRouter();
+
     const [showStatus, setStatus] = useState(false)
     const [isName, setName] = useState('')
     const [isContact, setContact] = useState('')
@@ -41,6 +47,7 @@ const mainPage = () => {
     const [totMemFree, setTotMemFree] = useState({})
     const [totMemReal, setTotMemReal] = useState({})
     const [availMemReal, setAvailMemReal] = useState({})
+    const [isRAMValues, setRAMValues] = useState({})
     const [isNetwork, setNetwork] = useState({
         value: '192.168.3.11',
     });
@@ -49,10 +56,17 @@ const mainPage = () => {
       }, [])
 
     let arr = [];
+    let RAMvalues = [];
     const { isOpen, onToggle, onClose } = useDisclosure()
 
     Auth();
 
+    function handleSubmit(){
+    
+
+        router.reload(window.location.pathname)
+    }
+    
     useEffect(() => {
         fetch(`/api/snmp?network=${isNetwork.value}&oid=1.3.6.1.2.1.1.5.0&req=get`)
         .then((res) => res.json())
@@ -84,11 +98,11 @@ const mainPage = () => {
         fetch(`/api/snmp?network=${isNetwork.value}&oid=1.3.6.1.2.1.1.3.0&req=get`)
         .then((res) => res.json())
         .then((data) => {
-            data = Math.ceil(data/8640000)
-            setUptime(data)
+            console.log("ISUPTIME : " + data[0].value)
+            setUptime(data[0].value)
+            
             setDataLoaded(true)
             setStatus(true);
-            ("DAATAAAAA :" + data)
         })
         .catch((e) => {
             console.error(e);
@@ -152,7 +166,6 @@ const mainPage = () => {
         fetch(`/api/snmp?network=${isNetwork.value}&oid=1.3.6.1.2.1.25.2.3.1.5&req=walk&stop=1.3.6.1.2.1.25.2.3.1.5.70`)
         .then((res) => res.json())
         .then((data) => {
-          (data);
           setDiskSpace(data)
         })
         .catch((e) => {
@@ -178,6 +191,9 @@ const mainPage = () => {
         .then((res) => res.json())
         .then((data) => {
           setAvailMemReal(data)
+          setRAMValues({"oid": data.oid,
+                            "value": data.values
+                            })
         })
         .catch((e) => {
             console.error(e);
@@ -190,6 +206,9 @@ const mainPage = () => {
         .then((res) => res.json())
         .then((data) => {
           setTotMemReal(data)
+          setRAMValues({"oid": data.oid,
+                        "value": data.values
+                        })
         })
         .catch((e) => {
             console.error(e);
@@ -201,6 +220,9 @@ const mainPage = () => {
         .then((res) => res.json())
         .then((data) => {
         setTotMemFree(data)
+        setRAMValues({"oid": data.oid,
+                      "value": data.values
+                    })
         })
         .catch((e) => {
             console.error(e);
@@ -216,18 +238,15 @@ const mainPage = () => {
     let memReal = []
 
     for(let i = 0; i < Object.size(availMemReal); ++i){
-        for(let j = 0; j < 100; ++j)
-            avail.push(availMemReal[i].value)
+        avail.push(availMemReal[i].value)
     }
     for(let i = 0; i < Object.size(totMemFree); ++i){
-        for(let j = 0; j < 100; ++j)
-            memFree.push(totMemFree[i].value)
+        memFree.push(totMemFree[i].value)
     }
     for(let i = 0; i < Object.size(totMemReal); ++i){
-        for(let j = 0; j < 100; ++j)
-            memReal.push(totMemReal[i].value)
+        memReal.push(totMemReal[i].value)
     }
-
+    
     const datasets_mem = [
         {
             data: avail,
@@ -258,12 +277,10 @@ const mainPage = () => {
     
     for(let i = 0; i < Object.size(isData); ++i){
         interface_in.push(isData[i].value)
-        console.log("interface in :" + interface_in)
     }
 
     for(let i = 0; i < Object.size(isData2); ++i){
         interface_out.push(isData2[i].value)
-        console.log("interface out :" + interface_out)
     }
     const datasets_interface = [
         {
@@ -293,7 +310,28 @@ const mainPage = () => {
                                     uptime={isUptime}
                                     devicetype={isDevice}
                                     icon={showStatus ? FcOk : AiOutline}
-                                    network={isNetwork.value}>
+                                    >
+                                    <Button   
+                                        rightIcon={<EditIcon />}  
+                                        onClick={onToggle}>
+                                        <Text fontSize='xs'>{isNetwork.value}</Text>
+                                    </Button>
+                                    <Modal isOpen={isOpen} onClose={onClose}>
+                                    <ModalOverlay/>
+                                    <ModalContent>
+                                    <ModalHeader><Center><Text as='u'>Changer d'adresse réseau</Text></Center></ModalHeader>
+                                    <ModalCloseButton/>
+                                    <ModalBody>
+                                        <FormControl>
+                                        <FormLabel>Adresse réseau</FormLabel>
+                                        <Input type='tel' isInvalid errorBorderColor='red.300' value={isNetwork.value} onChange={(e) => {setNetwork(e.target.value)}} placeholder='192.168.XXX.XXX' />
+                                        </FormControl>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button onClick={handleSubmit} colorScheme='cyan' mr={3} >Valider</Button>
+                                    </ModalFooter>
+                                    </ModalContent>
+                                    </Modal>
                                 </Card>
                             </GridItem>
                             <GridItem mt="100px" w="600px" height="40vh">
@@ -305,18 +343,32 @@ const mainPage = () => {
                                 />
                             </GridItem>
                             <GridItem height="40vh">
-                                <DoughnutChart 
+                                <DoughnutChart
+                                    options={1}
                                     data={diskSpace}
                                     labeldata={diskLabel}
-                                    title="Espace en GO"
+                                    title="Espace en Go"
+                                    bg={[
+                                        '#002B5B',
+                                        '#2B4865',
+                                        '#256D85',
+                                        '#8FE3CF'
+                                      ]}
                                     />
                             </GridItem>
                             <GridItem height="40vh">
-                                  <MultiLineChart
-                                    data={datasets_mem}
-                                    label="Ping"
-                                    labeldata={isLabel}
-                                    title="ping"
+                                  <PieChart
+                                    options={0}
+                                    data={totMemFree}
+                                    data2={totMemReal}
+                                    data3={availMemReal}
+                                    labeldata={["Memoire libre","Mémoire utilisé","Mémoire totale"]}
+                                    title="RAM en Go"
+                                    bg = {[
+                                        '#A66CFF',
+                                        '#9C9EFE',
+                                        '#B1E1FF'
+                                    ]}
                                     />
                             </GridItem>
 

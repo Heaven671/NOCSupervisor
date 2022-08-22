@@ -2,9 +2,11 @@ import {useState} from 'react';
 import {Button,Modal,ModalOverlay,useDisclosure,ModalContent,ModalHeader,ModalCloseButton,ModalBody,ModalFooter,FormControl,FormLabel,Input,Center,Text} from '@chakra-ui/react';
 import {EditIcon} from '@chakra-ui/icons'
 
-function ModalBox(props) {
+const ModalBox = (props) =>  {
     const { isOpen, onToggle, onClose } = useDisclosure()
     console.log("OOOOOOOOOOOO : "+ props.network)
+    for(let i in props)
+        console.log(props[i])
     const [networkValue, setNetworkValue] = useState({value: props.network});
     console.log("MODALBOX : " + networkValue.value)
     
@@ -23,7 +25,7 @@ function ModalBox(props) {
                 <ModalBody>
                     <FormControl>
                     <FormLabel>Adresse réseau</FormLabel>
-                    <Input type='tel' isInvalid errorBorderColor='red.300' value={networkValue.value} onChange={(e) => setNetworkValue(e.currentTarget.value)}placeholder='192.168.XXX.XXX' />
+                    <Input type='tel' isInvalid errorBorderColor='red.300' value={networkValue.value} onChange={(e) => props.set(e.currentTarget.value)}placeholder='192.168.XXX.XXX' />
                     </FormControl>
                 </ModalBody>
                 <ModalFooter>

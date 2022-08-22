@@ -5,7 +5,8 @@ export default async function handler(req,res){
     var oids = ["1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.6.0"];
     //var sysUptime = ["1.3.6.1.4.1.2021.10.1.3.1"];
     var oid = [`${req.query.oid}`];
-    let ret = [];
+    let ret =[];
+    let response
     if(req.query.req == 'get'){
         session.get (oid, function (error, varbinds) {
             if (error) {
@@ -19,7 +20,7 @@ export default async function handler(req,res){
                         //console.log (varbinds[i].oid + " = " + varbinds[i].value);
                         ret.push({
                             "oid": varbinds[i].oid,
-                            "value": response
+                            "value": varbinds[i].value.toString()
                         })
                     }
                 }
