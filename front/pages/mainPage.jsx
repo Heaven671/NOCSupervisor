@@ -5,18 +5,18 @@ import LineChart from '../components/LineChart';
 import DoughnutChart from '../components/DoughnutChart';
 import MultiLineChart from '../components/MultiLineChart';
 import PieChart from '../components/PieChart'
+import fetchData from '../components/Data.jsx';
 import ModalBox from '../components/ModalBox';
 import Bar from 'react-chartjs-2'
 import {useState} from 'react';
-import {Box, Flex, Grid, GridItem, Center, Popover,PopoverTrigger,PopoverContent,Text, Button,useDisclosure,Modal,ModalOverlay,ModalHeader,ModalBody,ModalContent,ModalCloseButton,FormControl,FormLabel,Input,ModalFooter} from '@chakra-ui/react'
-import {EditIcon} from '@chakra-ui/icons'
+import {Box, Flex, Grid, GridItem, Select, Stack, Center, Popover,PopoverTrigger,PopoverContent,Text, Button,useDisclosure,Menu,MenuList,MenuItem,MenuButton,MenuGroup,MenuItemOption,MenuOptionGroup,MenuDivider} from '@chakra-ui/react'
+import {EditIcon, ChevronDownIcon} from '@chakra-ui/icons'
 import { useEffect, useCallback } from 'react';
 import {FcOk} from 'react-icons/fc'
 import {AiOutline} from 'react-icons/ai'
 import {Auth} from './_app';
 import {Layout} from '../components/Layout'
 import { useRouter } from 'next/router';
-
 
 Object.size = function(obj) {
     var size = 0,
@@ -28,9 +28,9 @@ Object.size = function(obj) {
   };
 
 
-const mainPage = () => {    
-    const router = useRouter();
+const mainPage = (props) => { 
 
+    const router = useRouter();
     const [showStatus, setStatus] = useState(false)
     const [isName, setName] = useState('')
     const [isContact, setContact] = useState('')
@@ -48,24 +48,26 @@ const mainPage = () => {
     const [totMemReal, setTotMemReal] = useState({})
     const [availMemReal, setAvailMemReal] = useState({})
     const [isRAMValues, setRAMValues] = useState({})
-    const [isNetwork, setNetwork] = useState({
-        value: '192.168.3.11',
-    });
-    const setValue = useCallback((newValue) => {
-        setNetwork((prev) => ({ ...prev, value: newValue }))
-      }, [])
+    const [isNetwork, setNetwork] = useState({value: getSessionItem("network", "192.168.3.11")})
 
     let arr = [];
     let RAMvalues = [];
-    const { isOpen, onToggle, onClose } = useDisclosure()
-
-    Auth();
-
-    function handleSubmit(){
-    
-
-        router.reload(window.location.pathname)
+    const { isOpen, onToggle, onClose } = useDisclosure();
+ 
+    function getSessionItem(key, defaultValue){
+        let stored;
+        if(typeof window != "undefined"){
+           if(window.sessionStorage.getItem(key) !== undefined)
+                stored = window.sessionStorage.getItem(key);
+           console.log("stored :" + stored)
+        }
+        if(!stored){
+            return defaultValue
+        }
+        return stored
     }
+
+ 
     
     useEffect(() => {
         fetch(`/api/snmp?network=${isNetwork.value}&oid=1.3.6.1.2.1.1.5.0&req=get`)
@@ -296,6 +298,14 @@ const mainPage = () => {
             backgroundColor: "#D61C4E"
         }
     ]
+    
+    useEffect(function handleSubmit(value) {
+        if(typeof window != "undefined")
+            window.sessionStorage.setItem("network",value)
+        setNetwork({value: value})
+        router.push("/mainpage")
+    }, [])
+
         return (
             <>
                 <NavBar2/>
@@ -311,27 +321,31 @@ const mainPage = () => {
                                     devicetype={isDevice}
                                     icon={showStatus ? FcOk : AiOutline}
                                     >
-                                    <Button   
-                                        rightIcon={<EditIcon />}  
-                                        onClick={onToggle}>
-                                        <Text fontSize='xs'>{isNetwork.value}</Text>
-                                    </Button>
-                                    <Modal isOpen={isOpen} onClose={onClose}>
-                                    <ModalOverlay/>
-                                    <ModalContent>
-                                    <ModalHeader><Center><Text as='u'>Changer d'adresse réseau</Text></Center></ModalHeader>
-                                    <ModalCloseButton/>
-                                    <ModalBody>
-                                        <FormControl>
-                                        <FormLabel>Adresse réseau</FormLabel>
-                                        <Input type='tel' isInvalid errorBorderColor='red.300' value={isNetwork.value} onChange={(e) => {setNetwork(e.target.value)}} placeholder='192.168.XXX.XXX' />
-                                        </FormControl>
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <Button onClick={handleSubmit} colorScheme='cyan' mr={3} >Valider</Button>
-                                    </ModalFooter>
-                                    </ModalContent>
-                                    </Modal>
+                                    <Menu>
+                                        <MenuButton fontSize="xs" as={Button} rightIcon={<ChevronDownIcon />}>
+                                            {isNetwork.value}
+                                        </MenuButton>
+                                        <MenuList>
+                                            <MenuGroup title="192.168.3.0/25">
+                                                <MenuDivider/>
+                                                <MenuItem onClick={() => {handleSubmit("192.168.3.11")}}>192.168.3.11</MenuItem>
+                                                <MenuItem onClick={() => {handleSubmit("192.168.3.12")}}>192.168.3.12</MenuItem>
+                                                <MenuItem onClick={() => {handleSubmit("192.168.3.22")}}>192.168.3.22</MenuItem>
+                                                <MenuItem onClick={() => {handleSubmit("192.168.3.31")}}>192.168.3.31</MenuItem>
+                                                <MenuItem onClick={() => {handleSubmit("192.168.3.32")}}>192.168.3.32</MenuItem>
+                                                <MenuItem onClick={() => {handleSubmit("192.168.3.41")}}>192.168.3.41</MenuItem>
+                                                <MenuItem onClick={() => {handleSubmit("192.168.3.51")}}>192.168.3.51</MenuItem>
+                                            </MenuGroup>
+                                            <MenuDivider/>
+                                                <MenuGroup title="192.168.21.0/24">
+                                                    <MenuDivider/>
+                                                    <MenuItem>192.168.21.4</MenuItem>
+                                                    <MenuItem>192.168.21.5</MenuItem>
+                                                    <MenuItem>192.168.21.14</MenuItem>
+                                                    <MenuItem>192.168.21.15</MenuItem>
+                                                </MenuGroup>
+                                        </MenuList>
+                                    </Menu>
                                 </Card>
                             </GridItem>
                             <GridItem mt="100px" w="600px" height="40vh">
