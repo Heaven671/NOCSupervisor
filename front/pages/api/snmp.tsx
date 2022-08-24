@@ -7,17 +7,19 @@ export default async function handler(req,res){
     var oid = [`${req.query.oid}`];
     let ret =[];
     let response
+
     if(req.query.req == 'get'){
         session.get (oid, function (error, varbinds) {
             if (error) {
+                console.error(req.query.network)
                 console.error (error);
             } else {
                 for (var i = 0; i < varbinds.length; i++) {
                     if (snmp.isVarbindError (varbinds[i])) {
                         console.error (snmp.varbindError (varbinds[i]));
                     } else {
-                        let response = (varbinds[i].value).toString()
-                        //console.log (varbinds[i].oid + " = " + varbinds[i].value);
+                        response = (varbinds[i].value).toString()
+                        console.log (varbinds[i].oid + " = " + varbinds[i].value);
                         ret.push({
                             "oid": varbinds[i].oid,
                             "value": varbinds[i].value.toString()
@@ -31,6 +33,7 @@ export default async function handler(req,res){
     if(req.query.req == 'getData'){
         session.get (oid, function (error, varbinds) {
             if (error) {
+                
                 console.error (error);
             } else {
                 for (var i = 0; i < varbinds.length; i++) {

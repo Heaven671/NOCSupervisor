@@ -1,4 +1,4 @@
-import {ChakraProvider} from "@chakra-ui/react";
+import {ChakraProvider} from "@chakra-ui/react"
 import Fonts from '../components/Fonts'
 import theme from '../components/Theme'
 import {useRouter} from 'next/router'
@@ -37,7 +37,6 @@ export function Auth(){
 }
 export default function App({Component, pageProps}){
 
-    Auth();
     
     return(
         <ChakraProvider theme={theme}>
