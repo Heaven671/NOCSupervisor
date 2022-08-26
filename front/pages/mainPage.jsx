@@ -36,23 +36,26 @@ const mainPage = (props) => {
         let stored;
         if(typeof window !== 'undefined'){
            if(window.sessionStorage.getItem(key)){
-                if(window.sessionStorage.getItem(key) === 'undefined'){
+                console.log(typeof window.sessionStorage.getItem(key))
+                if(window.sessionStorage.getItem(key) === 'undefined' || window.sessionStorage.getItem(key) === "" ){
                     window.sessionStorage.setItem(key,defaultValue)
                     console.log("1 : "+ defaultValue)
                     return defaultValue
-                }
+                } else {
                 stored = window.sessionStorage.getItem(key);
                 console.log("2 : "+ stored)
                 return stored
+                }
            }
            window.sessionStorage.setItem(key, defaultValue);
         }
-        if(stored === "undefined"){
+        if(!stored){
             console.log("3 : " + defaultValue )
             return defaultValue
         }
     
     }
+    const regex = /^[0-9]*\.?[0-9]*$/;
     const router = useRouter();
     const [showStatus, setStatus] = useState(false)
     const [isName, setName] = useState('')
@@ -72,6 +75,8 @@ const mainPage = (props) => {
     const [availMemReal, setAvailMemReal] = useState({})
     const [isRAMValues, setRAMValues] = useState({})
     const [isNetwork, setNetwork] = useState({value : getSessionItem("network","192.168.3.11")})
+    const [getInput, setInput] = useState({});
+    const isInvalid = isNetwork.value == "" || isNetwork.value == "undefined" || isNetwork.value == "null" || isNetwork.value.match(regex)
 
     let arr = [];
     let RAMvalues = [];
@@ -285,6 +290,7 @@ const mainPage = (props) => {
     // *********************
     // GRAPHE INTERFACE DATA
     // *********************
+
     let interface_in = []
     let interface_out = []
     
@@ -314,10 +320,12 @@ const mainPage = (props) => {
     function handleSubmit(values) {
         event.preventDefault();
         if(typeof window !== "undefined"){
+            console.log("submitted..............................")
             window.sessionStorage.setItem("network",values)
             setNetwork({value: values})
+            router.reload();
         }
-        router.reload();
+        
     }
 
 
@@ -376,11 +384,11 @@ const mainPage = (props) => {
                                     <ModalBody>
                                         <FormControl>
                                         <FormLabel>Adresse réseau</FormLabel>
-                                        <Input type='tel' isInvalid errorBorderColor='red.300' value={isNetwork.value} onChange={(e) => {setNetwork({value: e.currentTarget.value})}} placeholder='192.168.XXX.XXX' />
+                                        <Input type='tel' isRequired isInvalid errorBorderColor='red.300' value={isNetwork.value} onChange={(e) => {setNetwork({value: e.currentTarget.value})}} placeholder='192.168.XXX.XXX' />
                                         </FormControl>
                                     </ModalBody>
                                     <ModalFooter>
-                                        <Button onClick={() => {handleSubmit(isNetwork.value)}}colorScheme='cyan' mr={3} >Valider</Button>
+                                        <Button disabled={isInvalid} onClick={(e) => {handleSubmit(isNetwork.value)}}colorScheme='cyan' mr={3} >Valider</Button>
                                     </ModalFooter>
                                     </ModalContent>
                                     </Modal>

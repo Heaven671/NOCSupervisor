@@ -1,3 +1,5 @@
+import { rmSync } from "fs";
+
 var snmp = require('net-snmp');
 
 export default async function handler(req,res){
@@ -68,14 +70,19 @@ export default async function handler(req,res){
                 if (snmp.isVarbindError (varbinds[i]))
                     console.error (snmp.varbindError (varbinds[i]));
                 else {
-                    if(varbinds[i].oid == req.query.stop ){
+                    if( ((req.query.network == "192.168.3.41") && (varbinds[i].oid == "1.3.6.1.2.1.2.2.1.16.162" || varbinds[i].oid == "1.3.6.1.2.1.2.2.1.10.162"))  ){
                         session.close();
                         res.send(JSON.stringify(ret));
                         break;
                     }
+                    else if(varbinds[i].oid == req.query.stop){
+                        session.close()
+                        res.send(JSON.stringify(ret))
+                        break;
+                    }
                     ret.push({
                         "oid": varbinds[i].oid,
-                        "value": varbinds[i].value instanceof Object ? varbinds[i].value.toString()  : varbinds[i].value
+                        "value": varbinds[i].value instanceof Object ?  varbinds[i].value.toString() : varbinds[i].value
                     })
                     //console.log (varbinds[i].oid + "|" + varbinds[i].value);
                 }
